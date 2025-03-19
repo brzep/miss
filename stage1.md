@@ -1,5 +1,6 @@
 # Symulacja dynamiki tłumów przy pomocy NetLogo
 ### Ewakuacja budynku D-17 WI AGH
+
 ## Ewakuacja
 Plany ewakuacji budynków są kluczowe dla planowania bezpieczeństwa publicznego. Ich rzetelne przygotowanie oraz testowanie znacząco zwiększają liczbę uratowanych osób. Warunki ewakuacji regulowane są aktami prawnymi takimi jak np. Ustawa o ochronie przeciwpożarowej, Rozporządzenie Ministra Spraw Wewnętrznych i Administracji w sprawie ochrony przeciwpożarowej budynków, innych obiektów budowlanych i terenów czy Rozporządzenie Ministra Infrastruktury w sprawie warunków technicznych, jakim powinny odpowiadać budynki i ich usytuowanie. Wytyczne te nie są jednak bardzo konkretne, co pozostawia pewne pole manewru w projektowaniu planów ewakuacji. Ważną jego częścią są symulacje pozwalające na przetestowanie proponowanych rozwiązań. Modelowanie zachowania tłumu jest zagadnieniem bardzo skomplikowanym. Składa się on bowiem z wielu jednostek, których indywidualne zachowanie warunkowane jest wieloma czynnikami, w tym także interakcjami z innymi jednostkami. Z tego powodu niemożliwym jest przewidzenie zachowania tłumu w sposób inny niż symulacja. Zaplanowanie efektywnie działającego systemu ewakuacji bazującego jedynie na “stałych” wytycznych, bez przeprowadzania symulacji, jest zatem niemożliwe.
 
@@ -29,8 +30,8 @@ D-17 jest budynkiem Wydziału Informatyki AGH w Krakowie. Budynek został oddany
 Do D-17 dostać można się przez dwa wejścia główne usytuowane w łączniku między skrzydłami. Budynek wyposażony jest w 12 wyjść ewakuacyjnych. Teren dookoła budynku jest ogrodzony, posiada dwie otwarte oraz jedną zamkniętą bramę. Miejsce zbiórki po ewakuacji znajduje się na pobliskim skwerze.
 W budynku w każdym dniu roboczym przebywają osoby pracujące oraz studiujące, łącznie ok.  osób. Liczba ta znacząco zwiększa się, gdy odbywają się w nim wydarzenia takie jak np. konferencje czy targi. Osoby zebrane są wtedy zazwyczaj na parterze, w obydwu skrzydłach.
 
-### Istniejące projekty symulacji
-#### [shingkid/crowd-evacuation-simulation](https://github.com/shingkid/crowd-evacuation-simulation)
+## Istniejące projekty symulacji
+### [shingkid/crowd-evacuation-simulation](https://github.com/shingkid/crowd-evacuation-simulation)
 - School of Information Systems, Singapore Management University
 - ewakuacja trybuny największej położonej na wodzie sceny na świecie oraz największego w Singapurze stadionu
 - dobrze opisane założenia:
@@ -47,15 +48,13 @@ W budynku w każdym dniu roboczym przebywają osoby pracujące oraz studiujące,
 - śmierć agenta
 - agent umiera w kontakcie z ogniem bądź od nacisku (obliczanego na podstawie masy i szybkości innych agentów) przekraczającego poziom (uzależniony od parametrów agenta)
 
-#### [hsouporto/FEUP_PRODEI_SSASC_2019](https://github.com/hsouporto/FEUP_PRODEI_SSASC_2019) 
+### [hsouporto/FEUP_PRODEI_SSASC_2019](https://github.com/hsouporto/FEUP_PRODEI_SSASC_2019) 
 - opiera się na powyższym i rozbudowuje go o kolejne parametry takie jak np.
     - szybkość rozchodzenia się ognia
     - liczbę źródeł ognia
     - dodatkowe strategie
 
-
-
-### Bibliografia
+## Bibliografia
 - https://journals.aps.org/pre/abstract/10.1103/PhysRevE.51.4282
 - https://gamma.cs.unc.edu/RVO/  	
 - https://www.mdpi.com/2071-1050/13/18/10277
