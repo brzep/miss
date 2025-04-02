@@ -1,7 +1,5 @@
 # miss
-Modelowanie i Symulacja Systemów
-Wydział Informatyki
-AGH Kraków
+Modelowanie i Symulacja Systemów, Wydział Informatyki, AGH Kraków
 
 ## sprawozdania
 - [etap 1](/stage1.md)
