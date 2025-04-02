@@ -29,12 +29,13 @@
 ### Analiza w kontekście ewakuacji
 - wszystkie drogi ewakuacyjne z pięter prowadzą przez klatki schodowe. Liczby osób w poszczególnych z nich kształtują się następująco:
 
-| piętro     | skrzydło turing |               | skrzydło shannon |               |
-|------------|-----------------|---------------|------------------|---------------|
-|            | klatka główna   | klatka boczna | klatka główna    | klatka boczna |
-| I piętro   | 126             | 118           | 54               | 39            |
-| II piętro  | 182             | 63            | 40               | 54            |
-| III piętro | 141             | 52            | 39               | 54            |
+| **piętro**     | **skrzydło turing** |                 | **skrzydło shannon** |                 |         |
+|:--------------:|:-------------------:|:---------------:|:--------------------:|:---------------:|:-------:|
+|                | _klatka główna_     | _klatka boczna_ | _klatka główna_      | _klatka boczna_ |**suma** |
+| **I piętro**   | 126                 | 118             | 54                   | 39              |**337**  |
+| **II piętro**  | 182                 | 63              | 40                   | 54              |**339**  |
+| **III piętro** | 141                 | 52              | 39                   | 54              |**286**  |
+| **suma**       | **449**             | **233**         | **133**              | **147**         |**962**  |
 
 - każda z klatek schodowych posiada bezpośrednie wyjście ewakuacyjne
     - przez wyjścia ewakuacyjne z klatek głównej skrzydła turing i bocznej skrzydła shannon ewakuuje się dodatkowo odpowiednio po 110 i 13 osób z sal na parterze
