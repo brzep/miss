@@ -26,20 +26,22 @@
 - 4 piętra
 - 2 oddzielne skrzydła budynku, po 2 klatki schodowe w każdym
 
-### analiza w kontekście ewakuacji
+### Analiza w kontekście ewakuacji
 - wszystkie drogi ewakuacyjne z pięter prowadzą przez klatki schodowe. Liczby osób w poszczególnych z nich kształtują się następująco:
-|            | skrzydło turing                 | skrzydło shannon                 |
+
+| piętro     | skrzydło turing |               | skrzydło shannon |               |
 |------------|-----------------|---------------|------------------|---------------|
-| piętro     | klatka główna   | klatka boczna | klatka główna    | klatka boczna |
+|            | klatka główna   | klatka boczna | klatka główna    | klatka boczna |
 | I piętro   | 126             | 118           | 54               | 39            |
 | II piętro  | 182             | 63            | 40               | 54            |
-| III piętro | 141             | 52            |                  | 54            |
+| III piętro | 141             | 52            | 39               | 54            |
+
 - każda z klatek schodowych posiada bezpośrednie wyjście ewakuacyjne
     - przez wyjścia ewakuacyjne z klatek głównej skrzydła turing i bocznej skrzydła shannon ewakuuje się dodatkowo odpowiednio po 110 i 13 osób z sal na parterze
 - pozostałe sale na parterze posiadają bezpośrednie wyjścia ewakuacyjne bądź są one zlokalizowane w bezpośredniej okolicy na korytarzu/w przyległej sali
 - biorąc pod uwagę układ budynku, w ewakuacji kluczowe jest utrzymanie jak największej przepustowości na klatkach schodowych
 
-### analiza w kontekście symulacji w netlogo
+### Analiza w kontekście symulacji w netlogo
 - poszczególne piętra można zamodelować jako plansze 2D
 - jedyne punkty styku między piętrami to klatki schodowe, jest ich cztery
 - *jeśli założyć przebieg ewakuacji zgodny z wytycznymi z planu ewakuacji*, model pięter można sprowadzić do czterech segmentów, każdy związany stricte z wybraną klatką + pojedyncze grupy sal na parterze - **niestety takie założenie jest jednak dalekie od prawdopodobnego realnego przebiegu ewakuacji, stąd jest ono błędne**
