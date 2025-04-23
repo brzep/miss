@@ -23,14 +23,12 @@ to setup-rooms
 end
 
 to create-rectangles [min-x max-x min-y max-y]
-  ;; Set patches within given coordinates to white
   ask patches with [pxcor >= min-x and pxcor <= max-x and pycor >= min-y and pycor <= max-y] [
     set pcolor white
   ]
 end
 
 to add-red-pixel [x y]
-  ;; Set specific patch at border to red
   ask patch x y [
     set pcolor red
   ]
