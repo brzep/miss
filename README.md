@@ -1,4 +1,4 @@
-# miss
+# Symulacja dynamiki tłumów przy pomocy NetLogo
 Modelowanie i Symulacja Systemów, Wydział Informatyki, AGH Kraków
 
 ## sprawozdania
