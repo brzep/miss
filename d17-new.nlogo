@@ -2,14 +2,14 @@ globals [teleport-pairs]
 patches-own [base-potential potential exit?]
 
 ; pcolors
-;   green 64.9
+;   green 66 (around)
 ;   white 9.9
-;   blue 104.7
+;   blue 108 (around)
 
 to setup-map
-  resize-world 0 151 0 80
-  set-patch-size 0.8
-  import-pcolors "parter.png"
+  resize-world 0 304 0 162
+  set-patch-size 4
+  import-pcolors "d17-new.bmp"
 end
 
 to setup-patches
@@ -25,7 +25,13 @@ to setup-patches
 end
 
 to spread-base-potential [p]
-  if (pcolor = 9.9 or pcolor = 104.7 or pcolor = 64.9) and base-potential < p [
+  let color-accuracy 4
+  if (
+    pcolor = 9.9
+    or (pcolor < (108 + color-accuracy) and  pcolor > (108 - color-accuracy))
+    or (pcolor < (66 + color-accuracy) and  pcolor > (66 - color-accuracy)))
+    and base-potential < p
+  [
     set base-potential p
     ask neighbors4 [ spread-base-potential p - 1 ]
     ask neighbors [ spread-base-potential p - 1.4 ]
@@ -54,8 +60,21 @@ end
 
 to setup-teleports
   set teleport-pairs [
-    [[[1426 963] [1437 997]] [[1416 112] [1427 142]]] ;ends of segments being border between teleport and floor
-    [[[1428 144] [1440 178]] [[3105 931] [3128 993]]]
+    ; 1-2
+      [[74 129] [231 136]]
+      [[75 130] [230 135]]
+      [[76 131] [229 134]]
+      [[76 132] [228 133]]
+    ; 2-3
+      [[226 129] [78 55]]
+      [[227 130] [77 54]]
+      [[228 131] [76 53]]
+      [[228 132] [75 52]]
+    ; 3-4
+      [[74 48] [235 55]]
+      [[75 49] [234 54]]
+      [[76 50] [233 53]]
+      [[77 51] [232 52]]
   ]
 end
 
@@ -98,7 +117,12 @@ to move-turtles
   ask turtles [
     move-to patch-here
 
-    let available-moves neighbors with [pcolor = 9.9 or pcolor = 104.7 or pcolor = 64.9]
+    let color-accuracy 4
+    let available-moves neighbors with [
+    pcolor = 9.9
+    or (pcolor < (108 + color-accuracy) and  pcolor < (108 - color-accuracy))
+    or (pcolor < (66 + color-accuracy) and  pcolor < (66 - color-accuracy))
+    ]
     if any? available-moves [
       let target max-one-of available-moves with [ count turtles-here = 0 ] [potential]
       if target != nobody and [potential] of target > potential [
@@ -112,53 +136,21 @@ end
 
 to check-teleport
   foreach teleport-pairs [
-      this-pair ->
-      let tel1-start item 0 item 0 this-pair
-      let tel1-end item 1 item 0 this-pair
-      let tel2-start item 0 item 1 this-pair
-      let tel2-end item 1 item 1 this-pair
+    this-pair ->
+    let tel1-x item 0 item 0 this-pair
+    let tel1-y item 0 item 1 this-pair
+    let tel2-x item 1 item 0 this-pair
+    let tel2-y item 1 item 1 this-pair
 
-      let current-pos list xcor ycor
-
-      ; Check if turtle crosses the first line of the pair
-      (ifelse (is-on-line? current-pos tel1-start tel1-end) [
-        move-to-line tel2-start tel2-end
+    (ifelse
+      (tel1-x = xcor and tel1-y = ycor) [
+        setxy tel2-x tel2-y
       ]
-
-      ; Check if turtle crosses the second line of the pair
-      (is-on-line? current-pos tel2-start tel2-end) [
-        move-to-line tel1-start tel1-end
-      ])
+      (tel2-x = xcor and tel2-y = ycor) [
+          setxy tel1-x tel1-y
+      ]
+     )
     ]
-end
-
-to-report is-on-line? [point line-start line-end]
-  let x0 item 0 point
-  let y0 item 1 point
-  let x1 item 0 line-start
-  let y1 item 1 line-start
-  let x2 item 0 line-end
-  let y2 item 1 line-end
-
-  let dist-total sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
-  let dist1 sqrt((x1 - x0) ^ 2 + (y1 - y0) ^ 2)
-  let dist2 sqrt((x2 - x0) ^ 2 + (y2 - y0) ^ 2)
-
-  report (dist1 + dist2 <= dist-total + 5)
-end
-
-; Helper to move turtle to a random position on a line
-to move-to-line [tel-start tel-end]
-  let x1 item 0 tel-start
-  let y1 item 1 tel-start
-  let x2 item 0 tel-end
-  let y2 item 1 tel-end
-
-  let t random-float 1 ; Generate a random interpolation factor
-  let new-x x1 + t * (x2 - x1)
-  let new-y y1 + t * (y2 - y1)
-
-  setxy new-x new-y
 end
 
 to maybe-show-potential
@@ -170,11 +162,11 @@ end
 GRAPHICS-WINDOW
 147
 14
-1663
-827
+1375
+675
 -1
 -1
-0.8
+4.0
 1
 1
 1
@@ -185,9 +177,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-151
+304
 0
-80
+162
 0
 0
 1
@@ -286,7 +278,7 @@ SWITCH
 368
 show-potential?
 show-potential?
-1
+0
 1
 -1000
 
