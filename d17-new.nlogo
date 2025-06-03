@@ -1,14 +1,19 @@
 globals [teleport-pairs]
 patches-own [base-potential potential exit?]
 
+; pcolors
+;   green 64.9
+;   white 9.9
+;   blue 104.7
+
 to setup-map
-  resize-world 0 3360 0 1640
-  set-patch-size 0.08
-  import-pcolors "d17.png"
+  resize-world 0 151 0 80
+  set-patch-size 0.8
+  import-pcolors "parter.png"
 end
 
 to setup-patches
-  ask patches with [pcolor = green] [
+  ask patches with [pcolor = 64.9] [
     set exit? true
     spread-base-potential 999
   ]
@@ -20,7 +25,7 @@ to setup-patches
 end
 
 to spread-base-potential [p]
-  if (pcolor = white or pcolor = blue) and base-potential < p [
+  if (pcolor = 9.9 or pcolor = 104.7 or pcolor = 64.9) and base-potential < p [
     set base-potential p
     ask neighbors4 [ spread-base-potential p - 1 ]
     ask neighbors [ spread-base-potential p - 1.4 ]
@@ -30,8 +35,8 @@ end
 to setup-turtles
   create-turtles 400
   ask turtles [
-    set size 20
-    while [ any? other turtles-here or pcolor != white ] [
+    set size 2
+    while [ any? other turtles-here or pcolor != 9.9 ] [
       setxy random-xcor random-ycor
       move-to patch-here
     ]
@@ -82,7 +87,7 @@ to evacuate-exits
 end
 
 to update-potential-field
-  ask patches [
+  ask patches with [ exit? = false ] [
     let nc sum [count turtles-here] of neighbors
     set potential base-potential - nc * 0.1
     maybe-show-potential
@@ -93,7 +98,7 @@ to move-turtles
   ask turtles [
     move-to patch-here
 
-    let available-moves neighbors with [pcolor = white or pcolor = blue]
+    let available-moves neighbors with [pcolor = 9.9 or pcolor = 104.7 or pcolor = 64.9]
     if any? available-moves [
       let target max-one-of available-moves with [ count turtles-here = 0 ] [potential]
       if target != nobody and [potential] of target > potential [
@@ -165,11 +170,11 @@ end
 GRAPHICS-WINDOW
 147
 14
-3508
-1664
+1663
+827
 -1
 -1
-0.08
+0.8
 1
 1
 1
@@ -180,9 +185,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-3360
+151
 0
-1640
+80
 0
 0
 1
