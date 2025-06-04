@@ -2,20 +2,21 @@ globals [teleport-pairs]
 patches-own [base-potential potential exit?]
 
 ; pcolors
-;   green 66 (around)
+;   green 65.7 (around)
 ;   white 9.9
 ;   blue 108 (around)
 
 to setup-map
-  resize-world 0 304 0 162
+  resize-world 0 303 0 161
   set-patch-size 4
   import-pcolors "d17-new.bmp"
 end
 
 to setup-patches
-  ask patches with [pcolor = 64.9] [
+  let color-accuracy 4
+  ask patches with [pcolor = 65.7] [
     set exit? true
-    spread-base-potential 999
+    spread-base-potential 999 false
   ]
 
   ask patches [
@@ -24,19 +25,42 @@ to setup-patches
   ]
 end
 
-to spread-base-potential [p]
+to spread-base-potential [p teleport-exit-flag]
   let color-accuracy 4
-  if (
-    pcolor = 9.9
-    or (pcolor < (108 + color-accuracy) and  pcolor > (108 - color-accuracy))
-    or (pcolor < (66 + color-accuracy) and  pcolor > (66 - color-accuracy)))
+  (ifelse
+    pcolor = 9.9 or pcolor = 65.7 or teleport-exit-flag = true
     and base-potential < p
-  [
-    set base-potential p
-    ask neighbors4 [ spread-base-potential p - 1 ]
-    ask neighbors [ spread-base-potential p - 1.4 ]
-  ]
+    [
+      set base-potential p
+      ask neighbors4 [ spread-base-potential p - 1 false ]
+      ask neighbors [ spread-base-potential p - 1.4 false ]
+    ]
+    pcolor = 104.2 and base-potential < p [
+      set base-potential p
+      check-teleport-potential p
+    ]
+  )
 end
+
+to check-teleport-potential [p]
+  foreach teleport-pairs [
+    this-pair ->
+    let tel1-x item 0 item 0 this-pair
+    let tel1-y item 1 item 0 this-pair
+    let tel2-x item 0 item 1 this-pair
+    let tel2-y item 1 item 1 this-pair
+
+    (ifelse
+      (tel1-x = pxcor and tel1-y = pycor) [
+        ask patch tel2-x tel2-y [ spread-base-potential p - 5 true ]
+      ]
+      (tel2-x = pxcor and tel2-y = pycor) [
+        ask patch tel1-x tel1-y [ spread-base-potential p - 5 true ]
+      ]
+     )
+    ]
+end
+
 
 to setup-turtles
   create-turtles 400
@@ -61,20 +85,20 @@ end
 to setup-teleports
   set teleport-pairs [
     ; 1-2
-      [[74 129] [231 136]]
-      [[75 130] [230 135]]
-      [[76 131] [229 134]]
-      [[76 132] [228 133]]
+      [[73 128] [230 135]]
+      [[74 129] [229 134]]
+      [[75 130] [228 133]]
+      [[75 131] [227 132]]
     ; 2-3
-      [[226 129] [78 55]]
-      [[227 130] [77 54]]
-      [[228 131] [76 53]]
-      [[228 132] [75 52]]
+      [[225 128] [78 54]]
+      [[226 129] [77 53]]
+      [[227 130] [76 52]]
+      [[227 131] [75 51]]
     ; 3-4
-      [[74 48] [235 55]]
-      [[75 49] [234 54]]
-      [[76 50] [233 53]]
-      [[77 51] [232 52]]
+      [[73 47] [231 54]]
+      [[74 48] [230 53]]
+      [[75 49] [229 52]]
+      [[75 50] [228 51]]
   ]
 end
 
@@ -108,7 +132,8 @@ end
 to update-potential-field
   ask patches with [ exit? = false ] [
     let nc sum [count turtles-here] of neighbors
-    set potential base-potential - nc * 0.1
+    ;set potential base-potential - nc * 0.1
+    set potential base-potential - nc * 0
     maybe-show-potential
   ]
 end
@@ -118,52 +143,56 @@ to move-turtles
     move-to patch-here
 
     let color-accuracy 4
-    let available-moves neighbors with [
-    pcolor = 9.9
-    or (pcolor < (108 + color-accuracy) and  pcolor < (108 - color-accuracy))
-    or (pcolor < (66 + color-accuracy) and  pcolor < (66 - color-accuracy))
-    ]
+    let available-moves neighbors with [ pcolor = 9.9 or pcolor = 65.7 or pcolor = 104.2 ]
     if any? available-moves [
       let target max-one-of available-moves with [ count turtles-here = 0 ] [potential]
       if target != nobody and [potential] of target > potential [
         face target
         move-to target
-        check-teleport
+        check-teleport-move
       ]
     ]
   ]
 end
 
-to check-teleport
+to check-teleport-move
   foreach teleport-pairs [
     this-pair ->
     let tel1-x item 0 item 0 this-pair
-    let tel1-y item 0 item 1 this-pair
-    let tel2-x item 1 item 0 this-pair
+    let tel1-y item 1 item 0 this-pair
+    let tel2-x item 0 item 1 this-pair
     let tel2-y item 1 item 1 this-pair
 
-    (ifelse
-      (tel1-x = xcor and tel1-y = ycor) [
+    ifelse tel1-x = xcor and tel1-y = ycor [
+      if (count (turtles-on patch tel2-x tel2-y) = 0) [
         setxy tel2-x tel2-y
       ]
-      (tel2-x = xcor and tel2-y = ycor) [
+    ]
+    [
+      if tel2-x = xcor and tel2-y = ycor [
+      if (count (turtles-on patch tel1-x tel1-y) = 0) [
           setxy tel1-x tel1-y
+        ]
       ]
-     )
+    ]
+
     ]
 end
 
+
 to maybe-show-potential
+  set plabel-color red
   ifelse show-potential? [
-    set plabel precision potential 1 ] [
+    set plabel precision potential 1] [
     set plabel "" ]
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 147
 14
-1375
-675
+1371
+671
 -1
 -1
 4.0
@@ -177,9 +206,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-304
+303
 0
-162
+161
 0
 0
 1
@@ -300,41 +329,7 @@ NIL
 1
 
 @#$#@#$#@
-## WHAT IS IT?
-
-(a general understanding of what the model is trying to show or explain)
-
-## HOW IT WORKS
-
-(what rules the agents use to create the overall behavior of the model)
-
-## HOW TO USE IT
-
-(how to use the model, including a description of each of the items in the Interface tab)
-
-## THINGS TO NOTICE
-
-(suggested things for the user to notice while running the model)
-
-## THINGS TO TRY
-
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
-
-## EXTENDING THE MODEL
-
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
-
-## NETLOGO FEATURES
-
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+super program to jest
 @#$#@#$#@
 default
 true
