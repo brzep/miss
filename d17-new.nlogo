@@ -9,7 +9,7 @@ patches-own [base-potential potential exit?]
 to setup-map
   resize-world 0 303 0 161
   set-patch-size 4
-  import-pcolors "d17-new.bmp"
+  import-pcolors "d17-new-turtles.bmp"
 end
 
 to setup-patches
@@ -28,7 +28,7 @@ end
 to spread-base-potential [p teleport-exit-flag]
   let color-accuracy 4
   (ifelse
-    pcolor = 9.9 or pcolor = 65.7 or teleport-exit-flag = true
+    pcolor = 9.9 or pcolor = 125.4 or pcolor = 65.7 or teleport-exit-flag = true
     and base-potential < p
     [
       set base-potential p
@@ -63,14 +63,20 @@ end
 
 
 to setup-turtles
-  create-turtles 400
-  ask turtles [
-    set size 2
-    while [ any? other turtles-here or pcolor != 9.9 ] [
-      setxy random-xcor random-ycor
-      move-to patch-here
+  ask patches with [pcolor = 125.4] [
+    sprout 1 [
+      set size 2
     ]
+    set pcolor 9.9
   ]
+  ;create-turtles 400
+  ;ask turtles [
+  ;  set size 2
+  ;  while [ any? other turtles-here or pcolor != 9.9 ] [
+  ;    setxy random-xcor random-ycor
+  ;    move-to patch-here
+  ;  ]
+  ;]
 end
 
 
@@ -121,6 +127,9 @@ to go
   move-turtles
 
   tick
+  if (ticks = 100) [
+    open-w3
+  ]
 end
 
 to evacuate-exits
@@ -186,12 +195,35 @@ to maybe-show-potential
     set plabel "" ]
 
 end
+
+to open-w3
+  ask patch 79 135 [set pcolor 9.9]
+  ask patch 80 135 [set pcolor 9.9]
+  ask patch 80 134 [set pcolor 9.9]
+  ask patch 81 134 [set pcolor 9.9]
+
+  ask patch 79 136 [
+    set potential base-potential
+    set exit? true
+    spread-base-potential 999 false
+  ]
+  ask patch 80 136 [
+    set potential base-potential
+    set exit? true
+    spread-base-potential 999 false
+  ]
+  ask patch 81 135 [
+    set potential base-potential
+    set exit? true
+    spread-base-potential 999 false
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-147
-14
-1371
-671
+274
+24
+1498
+681
 -1
 -1
 4.0
@@ -311,9 +343,9 @@ show-potential?
 -1000
 
 BUTTON
-61
+62
 286
-124
+125
 319
 NIL
 go
@@ -327,8 +359,26 @@ NIL
 NIL
 1
 
+PLOT
+35
+436
+235
+586
+turtles
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles"
+
 @#$#@#$#@
-super program to jest
+kocham netlogo <3
 @#$#@#$#@
 default
 true
