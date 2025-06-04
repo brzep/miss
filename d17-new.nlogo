@@ -132,8 +132,7 @@ end
 to update-potential-field
   ask patches with [ exit? = false ] [
     let nc sum [count turtles-here] of neighbors
-    ;set potential base-potential - nc * 0.1
-    set potential base-potential - nc * 0
+    set potential base-potential - nc * 2
     maybe-show-potential
   ]
 end
@@ -149,9 +148,9 @@ to move-turtles
       if target != nobody and [potential] of target > potential [
         face target
         move-to target
-        check-teleport-move
       ]
     ]
+    check-teleport-move
   ]
 end
 
