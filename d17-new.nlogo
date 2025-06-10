@@ -193,7 +193,7 @@ end
 to update-potential-field
   ask patches with [ exit? = false ] [
     let nc sum [count turtles-here] of neighbors
-    set potential base-potential - nc * 2
+    set potential base-potential - nc * 100
     maybe-show-potential
   ]
 end
