@@ -26,9 +26,8 @@ to setup-patches
 end
 
 to spread-base-potential [p teleport-exit-flag]
-  let color-accuracy 4
   (ifelse
-    pcolor = 9.9 or pcolor = 125.4 or pcolor = 65.7 or teleport-exit-flag = true
+    (pcolor = 9.9 or pcolor = 125.4 or pcolor = 65.7 or teleport-exit-flag = true)
     and base-potential < p
     [
       set base-potential p
@@ -203,20 +202,26 @@ to open-w3
   ask patch 81 134 [set pcolor 9.9]
 
   ask patch 79 136 [
-    set potential base-potential
     set exit? true
+    set base-potential -2137
     spread-base-potential 999 false
   ]
   ask patch 80 136 [
-    set potential base-potential
     set exit? true
+    set base-potential -2137
     spread-base-potential 999 false
   ]
   ask patch 81 135 [
-    set potential base-potential
     set exit? true
+    set base-potential -2137
     spread-base-potential 999 false
   ]
+
+  ask patches [
+    set potential base-potential
+    maybe-show-potential
+  ]
+  update-potential-field
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -379,6 +384,7 @@ PENS
 
 @#$#@#$#@
 kocham netlogo <3
+szkoda tylko, że netlogo mnie nie kocha
 @#$#@#$#@
 default
 true
