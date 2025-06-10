@@ -27,7 +27,7 @@ end
 
 to spread-base-potential [p teleport-exit-flag]
   (ifelse
-    (pcolor = 9.9 or pcolor = 125.4 or pcolor = 65 or teleport-exit-flag = true)
+    (pcolor = 9.9 or pcolor = 125.4 or pcolor = 14.9 or pcolor = 65 or teleport-exit-flag = true)
     and base-potential < p
     [
       set base-potential p
@@ -120,9 +120,68 @@ to go
   move-turtles
 
   tick
-  if (ticks = 100) [
-    open-w3
-  ]
+  (ifelse
+    ticks = 15 [
+      open-kor31
+    ]
+    ticks = 63 [
+      open-431
+    ]
+    ticks = 67 [
+      open-429
+    ]
+    ticks = 180 [
+      open-241
+    ]
+    ticks = 182 [
+      open-kor2
+    ]
+    ticks = 200 [
+      open-428
+    ]
+    ticks = 205 [
+      open-323
+    ]
+    ticks = 210 [
+      open-426
+    ]
+    ticks = 215 [
+      open-327c
+    ]
+    ticks = 217 [
+      open-kor4
+    ]
+    ticks = 223 [
+      open-kor32
+    ]
+    ticks = 228 [
+      open-324
+    ]
+    ticks = 238 [
+      open-430
+    ]
+    ticks = 240 [
+      open-327b
+    ]
+    ticks = 251 [
+      open-kor1
+    ]
+    ticks = 254 [
+      open-327e
+    ]
+    ticks = 259 [
+      open-w3
+    ]
+    ticks = 280 [
+      open-327a
+    ]
+    ticks = 332 [
+      open-327d
+    ]
+    ticks = 404 [
+      open-szat
+    ]
+  )
 end
 
 to evacuate-exits
@@ -209,6 +268,94 @@ to open-w3
     maybe-show-potential
   ]
   update-potential-field
+end
+
+to open-kor31
+  ask patch 37 22 [set pcolor 9.9]
+  ask patch 38 22 [set pcolor 9.9]
+  ask patch 39 22 [set pcolor 9.9]
+end
+
+to open-431
+  ask patch 99 18 [set pcolor 9.9]
+end
+
+to open-429
+  ask patch 104 12 [set pcolor 9.9]
+end
+
+to open-241
+  ask patch 132 48 [set pcolor 9.9]
+  ask patch 134 48 [set pcolor 9.9]
+end
+
+to open-kor2
+  ask patch 112 60 [set pcolor 9.9]
+  ask patch 113 60 [set pcolor 9.9]
+end
+
+to open-428
+  ask patch 112 12 [set pcolor 9.9]
+end
+
+to open-323
+  ask patch 51 14 [set pcolor 9.9]
+end
+
+to open-426
+  ask patch 123 11 [set pcolor 9.9]
+end
+
+to open-327c
+  ask patch 32 12 [set pcolor 9.9]
+end
+
+to open-kor4
+  ask patch 113 20 [set pcolor 9.9]
+  ask patch 114 20 [set pcolor 9.9]
+end
+
+to open-kor32
+  ask patch 36 20 [set pcolor 9.9]
+  ask patch 37 20 [set pcolor 9.9]
+end
+
+to open-324
+  ask patch 58 11 [set pcolor 9.9]
+end
+
+to open-430
+  ask patch 98 11 [set pcolor 9.9]
+end
+
+to open-327b
+  ask patch 43 12 [set pcolor 9.9]
+end
+
+to open-kor1
+  ask patch 38 58 [set pcolor 9.9]
+  ask patch 38 57 [set pcolor 9.9]
+  ask patch 38 56 [set pcolor 9.9]
+end
+
+to open-327e
+  ask patch 22 18 [set pcolor 9.9]
+end
+
+to open-327a
+  ask patch 46 11 [set pcolor 9.9]
+end
+
+to open-327d
+  ask patch 21 11 [set pcolor 9.9]
+end
+
+to open-szat
+  ask patch 16 58 [set pcolor 9.9]
+  ask patch 17 58 [set pcolor 9.9]
+  ask patch 18 58 [set pcolor 9.9]
+  ask patch 19 58 [set pcolor 9.9]
+  ask patch 20 58 [set pcolor 9.9]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
