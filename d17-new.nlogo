@@ -2,19 +2,19 @@ globals [teleport-pairs]
 patches-own [base-potential potential exit?]
 
 ; pcolors
-;   green 65.7 (around)
+;   green 65 (around)
 ;   white 9.9
 ;   blue 108 (around)
 
 to setup-map
-  resize-world 0 303 0 161
-  set-patch-size 4
-  import-pcolors "d17-new-turtles.bmp"
+  resize-world 0 151 0 80
+  set-patch-size 9
+  import-pcolors "d17-small-turtles.bmp"
 end
 
 to setup-patches
   let color-accuracy 4
-  ask patches with [pcolor = 65.7] [
+  ask patches with [pcolor = 65] [
     set exit? true
     spread-base-potential 999 false
   ]
@@ -27,7 +27,7 @@ end
 
 to spread-base-potential [p teleport-exit-flag]
   (ifelse
-    (pcolor = 9.9 or pcolor = 125.4 or pcolor = 65.7 or teleport-exit-flag = true)
+    (pcolor = 9.9 or pcolor = 125.4 or pcolor = 65 or teleport-exit-flag = true)
     and base-potential < p
     [
       set base-potential p
@@ -90,20 +90,14 @@ end
 to setup-teleports
   set teleport-pairs [
     ; 1-2
-      [[73 128] [230 135]]
-      [[74 129] [229 134]]
-      [[75 130] [228 133]]
-      [[75 131] [227 132]]
+      [[36 34] [114 67]]
+      [[37 65] [113 66]]
     ; 2-3
-      [[225 128] [78 54]]
-      [[226 129] [77 53]]
-      [[227 130] [76 52]]
-      [[227 131] [75 51]]
+      [[112 64] [38 26]]
+      [[113 65] [37 25]]
     ; 3-4
-      [[73 47] [231 54]]
-      [[74 48] [230 53]]
-      [[75 49] [229 52]]
-      [[75 50] [228 51]]
+      [[37 24] [114 25]]
+      [[36 23] [115 26]]
   ]
 end
 
@@ -150,7 +144,7 @@ to move-turtles
     move-to patch-here
 
     let color-accuracy 4
-    let available-moves neighbors with [ pcolor = 9.9 or pcolor = 65.7 or pcolor = 104.2 ]
+    let available-moves neighbors with [ pcolor = 9.9 or pcolor = 65 or pcolor = 104.2 ]
     if any? available-moves [
       let target max-one-of available-moves with [ count turtles-here = 0 ] [potential]
       if target != nobody and [potential] of target > potential [
@@ -196,22 +190,15 @@ to maybe-show-potential
 end
 
 to open-w3
-  ask patch 79 135 [set pcolor 9.9]
-  ask patch 80 135 [set pcolor 9.9]
-  ask patch 80 134 [set pcolor 9.9]
-  ask patch 81 134 [set pcolor 9.9]
+  ask patch 39 68 [set pcolor 9.9]
+  ask patch 40 68 [set pcolor 9.9]
 
-  ask patch 79 136 [
+  ask patch 39 69 [
     set exit? true
     set base-potential -2137
     spread-base-potential 999 false
   ]
-  ask patch 80 136 [
-    set exit? true
-    set base-potential -2137
-    spread-base-potential 999 false
-  ]
-  ask patch 81 135 [
+  ask patch 40 69 [
     set exit? true
     set base-potential -2137
     spread-base-potential 999 false
@@ -227,11 +214,11 @@ end
 GRAPHICS-WINDOW
 274
 24
-1498
-681
+1650
+762
 -1
 -1
-4.0
+9.0
 1
 1
 1
@@ -242,9 +229,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-303
+151
 0
-161
+80
 0
 0
 1
@@ -269,9 +256,9 @@ NIL
 1
 
 BUTTON
-28
+27
 76
-128
+127
 109
 NIL
 setup-map
