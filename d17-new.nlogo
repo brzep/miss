@@ -90,14 +90,17 @@ end
 to setup-teleports
   set teleport-pairs [
     ; 1-2
-      [[36 34] [114 67]]
-      [[37 65] [113 66]]
+      [[36 64] [113 65]]
+      [[36 63] [113 66]]
+      [[36 62] [114 67]]
     ; 2-3
-      [[112 64] [38 26]]
-      [[113 65] [37 25]]
+      [[112 64] [37 24]]
+      [[112 63] [37 25]]
+      [[112 62] [38 26]]
     ; 3-4
-      [[37 24] [114 25]]
       [[36 23] [115 26]]
+      [[36 22] [114 25]]
+      [[35 21] [114 24]]
   ]
 end
 
@@ -121,64 +124,64 @@ to go
 
   tick
   (ifelse
-    ticks = 15 [
+    ticks = 30 [
       open-kor31
     ]
-    ticks = 63 [
+    ticks = 126 [
       open-431
     ]
-    ticks = 67 [
+    ticks = 134 [
       open-429
     ]
-    ticks = 180 [
+    ticks = 360 [
       open-241
     ]
-    ticks = 182 [
+    ticks = 364 [
       open-kor2
     ]
-    ticks = 200 [
+    ticks = 400 [
       open-428
     ]
-    ticks = 205 [
+    ticks = 410 [
       open-323
     ]
-    ticks = 210 [
+    ticks = 420 [
       open-426
     ]
-    ticks = 215 [
+    ticks = 430 [
       open-327c
     ]
-    ticks = 217 [
+    ticks = 434 [
       open-kor4
     ]
-    ticks = 223 [
+    ticks = 446 [
       open-kor32
     ]
-    ticks = 228 [
+    ticks = 456 [
       open-324
     ]
-    ticks = 238 [
+    ticks = 476 [
       open-430
     ]
-    ticks = 240 [
+    ticks = 480 [
       open-327b
     ]
-    ticks = 251 [
+    ticks = 502 [
       open-kor1
     ]
-    ticks = 254 [
+    ticks = 508 [
       open-327e
     ]
-    ticks = 259 [
+    ticks = 518 [
       open-w3
     ]
-    ticks = 280 [
+    ticks = 560 [
       open-327a
     ]
-    ticks = 332 [
+    ticks = 664 [
       open-327d
     ]
-    ticks = 404 [
+    ticks = 808 [
       open-szat
     ]
   )
@@ -193,7 +196,7 @@ end
 to update-potential-field
   ask patches with [ exit? = false ] [
     let nc sum [count turtles-here] of neighbors
-    set potential base-potential - nc * 100
+    set potential base-potential - nc * 150
     maybe-show-potential
   ]
 end
@@ -271,9 +274,8 @@ to open-w3
 end
 
 to open-kor31
-  ask patch 37 22 [set pcolor 9.9]
-  ask patch 38 22 [set pcolor 9.9]
-  ask patch 39 22 [set pcolor 9.9]
+  ask patch 36 20 [set pcolor 9.9]
+  ask patch 37 20 [set pcolor 9.9]
 end
 
 to open-431
@@ -311,13 +313,29 @@ to open-327c
 end
 
 to open-kor4
-  ask patch 113 20 [set pcolor 9.9]
-  ask patch 114 20 [set pcolor 9.9]
+  ask patch 100 16 [set pcolor 9.9]
+  ask patch 101 16 [set pcolor 9.9]
+  ask patch 102 16 [set pcolor 9.9]
+  ask patch 102 15 [set pcolor 9.9]
+  ask patch 102 14 [set pcolor 9.9]
+  ask patch 102 13 [set pcolor 9.9]
 end
 
 to open-kor32
-  ask patch 36 20 [set pcolor 9.9]
-  ask patch 37 20 [set pcolor 9.9]
+  ask patch 24 13 [set pcolor 9.9]
+  ask patch 24 14 [set pcolor 9.9]
+  ask patch 24 15 [set pcolor 9.9]
+  ask patch 25 15 [set pcolor 9.9]
+  ask patch 25 16 [set pcolor 9.9]
+  ask patch 26 16 [set pcolor 9.9]
+  ask patch 27 16 [set pcolor 9.9]
+  ask patch 28 16 [set pcolor 9.9]
+  ask patch 29 16 [set pcolor 9.9]
+  ask patch 29 15 [set pcolor 9.9]
+  ask patch 30 15 [set pcolor 9.9]
+  ask patch 30 14 [set pcolor 9.9]
+  ask patch 30 13 [set pcolor 9.9]
+
 end
 
 to open-324
