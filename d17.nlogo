@@ -1,20 +1,81 @@
 globals [teleport-pairs]
+patches-own [base-potential potential exit?]
+
+; pcolors
+;   green 65 (around)
+;   white 9.9
+;   blue 108 (around)
 
 to setup-map
-  resize-world 0 3360 0 1640
-  set-patch-size 0.08
-  import-pcolors "d17.png"
+  resize-world 0 151 0 80
+  set-patch-size 9
+  import-pcolors "d17-turtles.bmp"
 end
 
-to setup-turtles
-  create-turtles 400
-  ask turtles [
-    set size 20
-    while [ any? other turtles-here or pcolor != white ] [
-      setxy random-xcor random-ycor
-      move-to patch-here
-    ]
+to setup-patches
+  let color-accuracy 4
+  ask patches with [pcolor = 65] [
+    set exit? true
+    spread-base-potential 999 false
   ]
+
+  ask patches [
+    set potential base-potential
+    maybe-show-potential
+  ]
+end
+
+to spread-base-potential [p teleport-exit-flag]
+  (ifelse
+    (pcolor = 9.9 or pcolor = 125.4 or pcolor = 14.9 or pcolor = 65 or teleport-exit-flag = true)
+    and base-potential < p
+    [
+      set base-potential p
+      ask neighbors4 [ spread-base-potential p - 1 false ]
+      ask neighbors [ spread-base-potential p - 1.4 false ]
+    ]
+    pcolor = 104.2 and base-potential < p [
+      set base-potential p
+      check-teleport-potential p
+    ]
+  )
+end
+
+to check-teleport-potential [p]
+  foreach teleport-pairs [
+    this-pair ->
+    let tel1-x item 0 item 0 this-pair
+    let tel1-y item 1 item 0 this-pair
+    let tel2-x item 0 item 1 this-pair
+    let tel2-y item 1 item 1 this-pair
+
+    (ifelse
+      (tel1-x = pxcor and tel1-y = pycor) [
+        ask patch tel2-x tel2-y [ spread-base-potential p - 5 true ]
+      ]
+      (tel2-x = pxcor and tel2-y = pycor) [
+        ask patch tel1-x tel1-y [ spread-base-potential p - 5 true ]
+      ]
+     )
+    ]
+end
+
+
+to setup-turtles
+  ask patches with [pcolor = 125.4] [
+    sprout 1 [
+      set size 2
+    ]
+    set pcolor 9.9
+  ]
+  ;create-turtles 400
+  ;ask turtles [
+  ;  set size 2
+  ;  while [ any? other turtles-here or pcolor != 9.9 ] [
+  ;    setxy random-xcor random-ycor
+  ;    move-to patch-here
+  ;  ]
+  ;]
 end
 
 
@@ -28,8 +89,18 @@ end
 
 to setup-teleports
   set teleport-pairs [
-    [[[1426 963] [1437 997]] [[1416 112] [1427 142]]] ;ends of segments being border between teleport and floor
-    [[[1428 144] [1440 178]] [[3105 931] [3128 993]]]
+    ; 1-2
+      [[36 64] [113 65]]
+      [[36 63] [113 66]]
+      [[36 62] [114 67]]
+    ; 2-3
+      [[112 64] [37 24]]
+      [[112 63] [37 25]]
+      [[112 62] [38 26]]
+    ; 3-4
+      [[36 23] [115 26]]
+      [[36 22] [114 25]]
+      [[35 21] [114 24]]
   ]
 end
 
@@ -38,84 +109,281 @@ to setup
 
   setup-teleports
   setup-map
+  setup-patches
   setup-turtles
 
   reset-ticks
 end
 
-to move-turtles
-  ask turtles [
-    let available-moves neighbors with [pcolor = white or pcolor = blue]
-    if any? available-moves [
-      let target one-of available-moves with [ count turtles-here = 0 ]
-      if target != nobody [
-        face target
-        move-to target
-        check-teleport
-      ]
+to go
+  if count turtles = 0 [ stop ]
+
+  evacuate-exits
+  update-potential-field
+  move-turtles
+
+  tick
+  (ifelse
+    ticks = 30 [
+      open-kor31
     ]
+    ticks = 126 [
+      open-431
+    ]
+    ticks = 134 [
+      open-429
+    ]
+    ticks = 360 [
+      open-241
+    ]
+    ticks = 364 [
+      open-kor2
+    ]
+    ticks = 400 [
+      open-428
+    ]
+    ticks = 410 [
+      open-323
+    ]
+    ticks = 420 [
+      open-426
+    ]
+    ticks = 430 [
+      open-327c
+    ]
+    ticks = 434 [
+      open-kor4
+    ]
+    ticks = 446 [
+      open-kor32
+    ]
+    ticks = 456 [
+      open-324
+    ]
+    ticks = 476 [
+      open-430
+    ]
+    ticks = 480 [
+      open-327b
+    ]
+    ticks = 502 [
+      open-kor1
+    ]
+    ticks = 508 [
+      open-327e
+    ]
+    ticks = 518 [
+      open-w3
+    ]
+    ticks = 560 [
+      open-327a
+    ]
+    ticks = 664 [
+      open-327d
+    ]
+    ticks = 808 [
+      open-szat
+    ]
+  )
+end
+
+to evacuate-exits
+  ask patches with [ exit? = true ] [
+    ask turtles-here [ die ]
   ]
 end
 
-to check-teleport
-  foreach teleport-pairs [
-      this-pair ->
-      let tel1-start item 0 item 0 this-pair
-      let tel1-end item 1 item 0 this-pair
-      let tel2-start item 0 item 1 this-pair
-      let tel2-end item 1 item 1 this-pair
+to update-potential-field
+  ask patches with [ exit? = false ] [
+    let nc sum [count turtles-here] of neighbors
+    set potential base-potential - nc * 150
+    maybe-show-potential
+  ]
+end
 
-      let current-pos list xcor ycor
+to move-turtles
+  ask turtles [
+    move-to patch-here
 
-      ; Check if turtle crosses the first line of the pair
-      (ifelse (is-on-line? current-pos tel1-start tel1-end) [
-        move-to-line tel2-start tel2-end
+    let color-accuracy 4
+    let available-moves neighbors with [ pcolor = 9.9 or pcolor = 65 or pcolor = 104.2 ]
+    if any? available-moves [
+      let target max-one-of available-moves with [ count turtles-here = 0 ] [potential]
+      if target != nobody and [potential] of target > potential [
+        face target
+        move-to target
       ]
+    ]
+    check-teleport-move
+  ]
+end
 
-      ; Check if turtle crosses the second line of the pair
-      (is-on-line? current-pos tel2-start tel2-end) [
-        move-to-line tel1-start tel1-end
-      ])
+to check-teleport-move
+  foreach teleport-pairs [
+    this-pair ->
+    let tel1-x item 0 item 0 this-pair
+    let tel1-y item 1 item 0 this-pair
+    let tel2-x item 0 item 1 this-pair
+    let tel2-y item 1 item 1 this-pair
+
+    ifelse tel1-x = xcor and tel1-y = ycor [
+      if (count (turtles-on patch tel2-x tel2-y) = 0) [
+        setxy tel2-x tel2-y
+      ]
+    ]
+    [
+      if tel2-x = xcor and tel2-y = ycor [
+      if (count (turtles-on patch tel1-x tel1-y) = 0) [
+          setxy tel1-x tel1-y
+        ]
+      ]
+    ]
+
     ]
 end
 
-to-report is-on-line? [point line-start line-end]
-  let x0 item 0 point
-  let y0 item 1 point
-  let x1 item 0 line-start
-  let y1 item 1 line-start
-  let x2 item 0 line-end
-  let y2 item 1 line-end
 
-  let dist-total sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
-  let dist1 sqrt((x1 - x0) ^ 2 + (y1 - y0) ^ 2)
-  let dist2 sqrt((x2 - x0) ^ 2 + (y2 - y0) ^ 2)
+to maybe-show-potential
+  set plabel-color red
+  ifelse show-potential? [
+    set plabel precision potential 1] [
+    set plabel "" ]
 
-  report (dist1 + dist2 <= dist-total + 5)
 end
 
-; Helper to move turtle to a random position on a line
-to move-to-line [tel-start tel-end]
-  let x1 item 0 tel-start
-  let y1 item 1 tel-start
-  let x2 item 0 tel-end
-  let y2 item 1 tel-end
+to open-w3
+  ask patch 39 68 [set pcolor 9.9]
+  ask patch 40 68 [set pcolor 9.9]
 
-  let t random-float 1 ; Generate a random interpolation factor
-  let new-x x1 + t * (x2 - x1)
-  let new-y y1 + t * (y2 - y1)
+  ask patch 39 69 [
+    set exit? true
+    set base-potential -2137
+    spread-base-potential 999 false
+  ]
+  ask patch 40 69 [
+    set exit? true
+    set base-potential -2137
+    spread-base-potential 999 false
+  ]
 
-  setxy new-x new-y
+  ask patches [
+    set potential base-potential
+    maybe-show-potential
+  ]
+  update-potential-field
+end
+
+to open-kor31
+  ask patch 36 20 [set pcolor 9.9]
+  ask patch 37 20 [set pcolor 9.9]
+end
+
+to open-431
+  ask patch 99 18 [set pcolor 9.9]
+end
+
+to open-429
+  ask patch 104 12 [set pcolor 9.9]
+end
+
+to open-241
+  ask patch 132 48 [set pcolor 9.9]
+  ask patch 134 48 [set pcolor 9.9]
+end
+
+to open-kor2
+  ask patch 112 60 [set pcolor 9.9]
+  ask patch 113 60 [set pcolor 9.9]
+end
+
+to open-428
+  ask patch 112 12 [set pcolor 9.9]
+end
+
+to open-323
+  ask patch 51 14 [set pcolor 9.9]
+end
+
+to open-426
+  ask patch 123 11 [set pcolor 9.9]
+end
+
+to open-327c
+  ask patch 32 12 [set pcolor 9.9]
+end
+
+to open-kor4
+  ask patch 100 16 [set pcolor 9.9]
+  ask patch 101 16 [set pcolor 9.9]
+  ask patch 102 16 [set pcolor 9.9]
+  ask patch 102 15 [set pcolor 9.9]
+  ask patch 102 14 [set pcolor 9.9]
+  ask patch 102 13 [set pcolor 9.9]
+end
+
+to open-kor32
+  ask patch 24 13 [set pcolor 9.9]
+  ask patch 24 14 [set pcolor 9.9]
+  ask patch 24 15 [set pcolor 9.9]
+  ask patch 25 15 [set pcolor 9.9]
+  ask patch 25 16 [set pcolor 9.9]
+  ask patch 26 16 [set pcolor 9.9]
+  ask patch 27 16 [set pcolor 9.9]
+  ask patch 28 16 [set pcolor 9.9]
+  ask patch 29 16 [set pcolor 9.9]
+  ask patch 29 15 [set pcolor 9.9]
+  ask patch 30 15 [set pcolor 9.9]
+  ask patch 30 14 [set pcolor 9.9]
+  ask patch 30 13 [set pcolor 9.9]
+
+end
+
+to open-324
+  ask patch 58 11 [set pcolor 9.9]
+end
+
+to open-430
+  ask patch 98 11 [set pcolor 9.9]
+end
+
+to open-327b
+  ask patch 43 12 [set pcolor 9.9]
+end
+
+to open-kor1
+  ask patch 38 58 [set pcolor 9.9]
+  ask patch 38 57 [set pcolor 9.9]
+  ask patch 38 56 [set pcolor 9.9]
+end
+
+to open-327e
+  ask patch 22 18 [set pcolor 9.9]
+end
+
+to open-327a
+  ask patch 46 11 [set pcolor 9.9]
+end
+
+to open-327d
+  ask patch 21 11 [set pcolor 9.9]
+end
+
+to open-szat
+  ask patch 16 58 [set pcolor 9.9]
+  ask patch 17 58 [set pcolor 9.9]
+  ask patch 18 58 [set pcolor 9.9]
+  ask patch 19 58 [set pcolor 9.9]
+  ask patch 20 58 [set pcolor 9.9]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-147
-14
-1495
-677
+274
+24
+1650
+762
 -1
 -1
-0.08
+9.0
 1
 1
 1
@@ -126,9 +394,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-3360
+151
 0
-1640
+80
 0
 0
 1
@@ -153,9 +421,9 @@ NIL
 1
 
 BUTTON
-28
+27
 76
-128
+127
 109
 NIL
 setup-map
@@ -220,42 +488,58 @@ NIL
 NIL
 1
 
+SWITCH
+11
+335
+167
+368
+show-potential?
+show-potential?
+0
+1
+-1000
+
+BUTTON
+62
+286
+125
+319
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+PLOT
+35
+436
+235
+586
+turtles
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles"
+
 @#$#@#$#@
-## WHAT IS IT?
+kocham netlogo <3
+szkoda tylko, że netlogo mnie nie kocha
 
-(a general understanding of what the model is trying to show or explain)
-
-## HOW IT WORKS
-
-(what rules the agents use to create the overall behavior of the model)
-
-## HOW TO USE IT
-
-(how to use the model, including a description of each of the items in the Interface tab)
-
-## THINGS TO NOTICE
-
-(suggested things for the user to notice while running the model)
-
-## THINGS TO TRY
-
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
-
-## EXTENDING THE MODEL
-
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
-
-## NETLOGO FEATURES
-
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+pozdrawiamy serdecznie jeśli to czytasz :))
+powodzenia z netlogo
 @#$#@#$#@
 default
 true
